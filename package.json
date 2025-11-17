@@ -1,0 +1,35 @@
+{
+  "name": "sui-dat",
+  "version": "1.0.0",
+  "description": "Sui Decentralized AI Training Platform",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && python -m app.main",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && python -m compileall app",
+    "build": "npm run build:frontend && npm run build:backend",
+    "test:frontend": "cd frontend && npm run test",
+    "test:backend": "cd backend && python -m pytest",
+    "test": "npm run test:frontend && npm run test:backend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && pylint app",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "setup": "npm install && cd frontend && npm install && cd ../backend && pip install -r requirements.txt"
+  },
+  "keywords": [
+    "sui",
+    "decentralized",
+    "ai",
+    "machine-learning",
+    "blockchain"
+  ],
+  "author": "Sui-DAT Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
