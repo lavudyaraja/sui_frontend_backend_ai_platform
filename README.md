@@ -1,11 +1,27 @@
 # Sui-DAT: Decentralized AI Training Platform
 
+<div align="center">
+  <img src="frontend/public/logos/sui-dat-logo.svg" alt="Sui-DAT Logo" width="200"/>
+</div>
+
+**🏆 Walrus Haulout Hackathon - AI x Data Track**
+
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.68.0%2B-green.svg)](https://fastapi.tiangolo.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-14.0%2B-black.svg)](https://nextjs.org/)
 
-Sui-DAT (Sui Decentralized AI Training) is a revolutionary platform that enables collaborative machine learning model training using the Sui blockchain and Walrus storage system. This project demonstrates how decentralized technologies can be leveraged for distributed AI training while ensuring transparency, security, and fair reward distribution.
+Sui-DAT (Sui Decentralized AI Training) is a revolutionary platform that **democratizes AI training** by enabling distributed machine learning across everyone's computers instead of centralized data centers. Built for the **Walrus Haulout Hackathon - AI x Data Track**, this project leverages the Sui blockchain and Walrus storage to create truly decentralized AI that trains across distributed compute and stores intermediaries on-chain.
+
+## 🎯 Hackathon Alignment: AI x Data Track
+
+This project directly addresses the AI x Data track requirements:
+
+- ✅ **Democratized AI Training**: Uses distributed compute across multiple participants' machines instead of centralized data centers
+- ✅ **Decentralized Storage**: Stores training data, gradients, and model checkpoints on Walrus decentralized storage
+- ✅ **On-Chain Intermediaries**: Stores training metadata, gradients, and model updates on Sui blockchain
+- ✅ **Real-Time Data Integration**: Leverages on-chain data for training and model updates
+- ✅ **Adaptive Systems**: Enables federated learning with real-time gradient aggregation
 
 ## Table of Contents
 
@@ -92,6 +108,7 @@ AI_agent/
 │   │   ├── config.py           # Configuration
 │   │   └── main.py             # Application entry point
 │   ├── requirements.txt        # Python dependencies
+│   ├── vercel.json             # Backend deployment configuration
 │   └── README.md               # Backend documentation
 ├── frontend/                   # Next.js web interface
 │   ├── src/                    # Source code
@@ -100,6 +117,11 @@ AI_agent/
 │   │   ├── lib/                # Utility functions
 │   │   └── services/           # API services
 │   ├── public/                 # Static assets
+│   │   └── logos/              # Project logos
+│   │       ├── sui-dat-logo.svg # Main project logo
+│   │       ├── sui-dat-icon.svg # Navbar icon
+│   │       ├── main-logo.svg    # Legacy logo
+│   │       └── white-logo.svg   # Legacy logo
 │   └── README.md               # Frontend documentation
 └── README.md                   # Project documentation
 ```

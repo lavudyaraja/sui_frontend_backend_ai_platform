@@ -333,10 +333,25 @@ export default function EnhancedTrainingPage() {
       });
       
       if (!response.ok) {
-        throw new Error('Failed to start training');
+        // Try to extract error message from response
+        let errorMessage = 'Failed to start training';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.error || errorData.message || errorMessage;
+        } catch {
+          // If JSON parsing fails, use status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
       
       const result = await response.json();
+      
+      if (!result.success) {
+        const errorMsg = result.detail || result.error || 'Failed to start training';
+        throw new Error(errorMsg);
+      }
+      
       setSessionId(result.session_id);
       setStatus('training');
       
@@ -348,6 +363,7 @@ export default function EnhancedTrainingPage() {
       setError(errorMsg);
       setStatus('failed');
       addLog('error', errorMsg);
+      console.error('Training start error:', error);
     }
   }, [datasetInfo, config]);
   

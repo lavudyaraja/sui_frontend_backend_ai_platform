@@ -36,10 +36,11 @@ import {
 } from "lucide-react";
 
 import WalletConnection from "@/app/(dashboard)/auth/components/wallet-connection";
+import Logo from "./logo"; // Import the new Logo component
 
 // Navigation configuration
 const navItems = [
-  { title: "Overview", url: "/dashboard", icon: Home },
+  { title: "Overview", url: "/", icon: Home },
   { title: "Training", url: "/training", icon: Cpu, badge: "Live" },
   { title: "Model Versions", url: "/model", icon: Database },
   { title: "Contributors", url: "/contributors", icon: Users },
@@ -122,11 +123,14 @@ export default function AppSidebar() {
       <SidebarHeader className="border-b border-gray-200/60 dark:border-gray-800/60 bg-white dark:bg-gray-950">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="relative flex items-center justify-center h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-sm">
-              <Cpu className="h-5 w-5 text-white" strokeWidth={2.5} />
-              <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-white dark:ring-gray-950" />
-            </div>
-
+           <div className="">
+                <img 
+                  src="/logos/main-logo.svg" 
+                  alt="Sui-DAT Logo" 
+                  className="h-12 w-12"
+                />
+                {/* <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-white dark:ring-gray-950" /> */}
+              </div>
             <div className="flex flex-col">
               <span className="font-semibold text-sm text-gray-900 dark:text-white">
                 Sui-DAT

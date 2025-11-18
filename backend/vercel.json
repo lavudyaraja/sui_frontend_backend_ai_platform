@@ -8,8 +8,7 @@
         "runtime": "python3.9",
         "includeFiles": [
           "requirements.txt",
-          "app/**",
-          ".env"
+          "app/**/*"
         ]
       }
     }
@@ -19,5 +18,8 @@
       "src": "/(.*)",
       "dest": "app/main.py"
     }
-  ]
+  ],
+  "env": {
+    "ENVIRONMENT": "production"
+  }
 }

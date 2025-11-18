@@ -20,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <title>Sui-DAT - Decentralized AI Training Platform</title>
         <meta name="description" content="Decentralized AI training platform built on Sui and Walrus" />
       </head>

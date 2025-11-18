@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ConnectButton } from '@/components/wallet/connect-button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Brain } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,13 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <Brain className="h-8 w-8 text-indigo-600" />
+              <Image 
+                src="/logos/sui-dat-icon.svg" 
+                alt="Sui-DAT Logo" 
+                width={32} 
+                height={32} 
+                className="h-8 w-8"
+              />
               <span className="text-xl font-bold">Sui-DAT</span>
             </Link>
             
