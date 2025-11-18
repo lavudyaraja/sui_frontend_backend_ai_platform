@@ -1,6 +1,7 @@
 'use client';
 
-import './globals.css';
+import "./globals.css";
+
 import { SuiClientProvider, WalletProvider } from '@mysten/dapp-kit';
 import { getFullnodeUrl } from '@mysten/sui.js/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
