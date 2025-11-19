@@ -1,21 +1,17 @@
 module sui_dat::contributor {
-    use std::string::String;
-    use sui::object::{Self, UID};
-    use sui::transfer;
-    use sui::tx_context::{Self, TxContext};
-    use sui::dynamic_field::{Self, add, borrow, borrow_mut, remove};
-    use sui::bag::Bag;
+    use sui::bag::{Self, Bag};
 
     /// Global configuration for the Sui-DAT protocol
-    struct GlobalConfig has key {
+    public struct GlobalConfig has key {
         id: UID,
         admin: address,
         min_stake: u64,
         reward_per_contribution: u64,
+        contributors: Bag,
     }
 
     /// Contributor information
-    struct Contributor has store {
+    public struct Contributor has store {
         address: address,
         reputation: u64,
         contributions: u64,
@@ -24,10 +20,9 @@ module sui_dat::contributor {
 
     const ENotAuthorized: u64 = 0;
     const EContributorNotFound: u64 = 1;
-    const EInsufficientStake: u64 = 2;
 
     /// Create global configuration
-    public entry fun create_global_config(
+    public fun create_global_config(
         min_stake: u64,
         reward_per_contribution: u64,
         ctx: &mut TxContext
@@ -37,55 +32,68 @@ module sui_dat::contributor {
             admin: tx_context::sender(ctx),
             min_stake,
             reward_per_contribution,
+            contributors: bag::new(ctx),
         };
-        transfer::transfer(config, tx_context::sender(ctx));
+
+        // Share the config object so it can be accessed by multiple users
+        transfer::share_object(config);
     }
 
-    /// Register a new contributor
-    public entry fun register_contributor(
-        config: &GlobalConfig,
+    /// Register a contributor
+    public fun register_contributor(
+        config: &mut GlobalConfig,
         ctx: &mut TxContext
     ) {
-        // In a real implementation, you might want to check if contributor already exists
-        // and handle stake requirements
+        let contributor_address = tx_context::sender(ctx);
+        
+        // Check if contributor already exists
+        if (!bag::contains(&config.contributors, contributor_address)) {
+            let contributor = Contributor {
+                address: contributor_address,
+                reputation: 0,
+                contributions: 0,
+                last_contribution: tx_context::epoch(ctx),
+            };
+            
+            bag::add(&mut config.contributors, contributor_address, contributor);
+        }
     }
 
-    /// Award reputation to a contributor
-    public entry fun award_reputation(
+    /// Award reputation
+    public fun award_reputation(
         config: &mut GlobalConfig,
         contributor_address: address,
         amount: u64,
         ctx: &mut TxContext
     ) {
-        // Verify sender is admin
         assert!(config.admin == tx_context::sender(ctx), ENotAuthorized);
+        assert!(bag::contains(&config.contributors, contributor_address), EContributorNotFound);
 
-        // In a real implementation, you would update the contributor's reputation
-        // This is a simplified placeholder
+        let contributor = bag::borrow_mut<address, Contributor>(&mut config.contributors, contributor_address);
+        contributor.reputation = contributor.reputation + amount;
     }
 
-    /// Get contributor information (view function)
-    public fun get_contributor(config: &GlobalConfig, contributor_address: address): Contributor {
-        // In a real implementation, you would fetch the contributor from storage
-        // This is a simplified placeholder that returns default values
-        Contributor {
-            address: contributor_address,
-            reputation: 100,
-            contributions: 5,
-            last_contribution: 1000000, // Placeholder timestamp
-        }
+    /// Read-only contributor view
+    public fun get_contributor(
+        config: &GlobalConfig,
+        contributor_address: address
+    ): &Contributor {
+        assert!(bag::contains(&config.contributors, contributor_address), EContributorNotFound);
+        bag::borrow<address, Contributor>(&config.contributors, contributor_address)
     }
 
-    /// Update contributor after successful contribution
-    public entry fun update_contributor_after_contribution(
+    /// Update contributor after contribution
+    public fun update_contributor_after_contribution(
         config: &mut GlobalConfig,
         contributor_address: address,
         ctx: &mut TxContext
     ) {
-        // Verify sender is admin
         assert!(config.admin == tx_context::sender(ctx), ENotAuthorized);
+        assert!(bag::contains(&config.contributors, contributor_address), EContributorNotFound);
 
-        // In a real implementation, you would update the contributor's stats
-        // This is a simplified placeholder
+        let contributor = bag::borrow_mut<address, Contributor>(&mut config.contributors, contributor_address);
+        contributor.contributions = contributor.contributions + 1;
+        contributor.last_contribution = tx_context::epoch(ctx);
+        contributor.reputation = contributor.reputation + config.reward_per_contribution;
     }
 }

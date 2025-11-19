@@ -259,10 +259,10 @@ export default function AboutPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="h-12 px-8 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 shadow-sm">
-                <Link href="/join">Join the Training Network</Link>
+                <Link href="/marketing/join">Join the Training Network</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-12 px-8 border-slate-300 hover:bg-slate-50">
-                <Link href="/pricing">View Contribution Tiers</Link>
+                <Link href="/marketing/pricing">View Contribution Tiers</Link>
               </Button>
             </div>
           </div>

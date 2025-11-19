@@ -5,7 +5,7 @@ import { useCurrentAccount, useDisconnectWallet, useConnectWallet } from '@myste
 
 // Network configuration
 export const NETWORK = {
-  MAINNET: 'mainnet',
+  MAINNET: 'testnet',
   TESTNET: 'testnet',
   DEVNET: 'devnet',
   LOCALNET: 'localnet',
@@ -80,7 +80,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   // Detect network changes (if available in account data)
   useEffect(() => {
     // You can implement network detection logic here based on your setup
-    // For now, defaulting to mainnet
+    // For now, defaulting to testnet
     setCurrentNetwork(NETWORK.MAINNET);
   }, [account]);
 

@@ -182,7 +182,7 @@ export default function EnhancedModelDashboard() {
           <div className="flex items-center gap-3">
             <Badge variant="success">
               <CheckCircle2 className="h-3 w-3 mr-1" />
-              Mainnet Live
+              Testnet Live
             </Badge>
             <Button variant="outline">
               <RefreshCw className="h-4 w-4 mr-2" />

@@ -35,23 +35,23 @@ import {
   Wallet,
 } from "lucide-react";
 
-import WalletConnection from "@/app/(dashboard)/auth/components/wallet-connection";
+import WalletConnection from "@/app/dashboard/auth/components/wallet-connection";
 
 // Navigation configuration
 const navItems = [
   { title: "Overview", url: "/", icon: Home },
-  { title: "Training", url: "/training", icon: Cpu, badge: "Live" },
-  { title: "Model Versions", url: "/model", icon: Database },
-  { title: "Contributors", url: "/contributors", icon: Users },
-  { title: "Analytics", url: "/analytics", icon: BarChart },
-  { title: "Activity", url: "/activity", icon: Activity, badge: "" },
-  { title: "Marketing", url: "/Marketing", icon: Map, badge: "" },
+  { title: "Training", url: "/dashboard/training", icon: Cpu, badge: "Live" },
+  { title: "Model Versions", url: "/dashboard/model", icon: Database },
+  { title: "Contributors", url: "/dashboard/contributors", icon: Users },
+  { title: "Analytics", url: "/dashboard/analytics", icon: BarChart },
+  { title: "Activity", url: "/dashboard/activity", icon: Activity, badge: "" },
+  { title: "Marketing", url: "/marketing", icon: Map, badge: "" },
   { title: "Wallet", url: "/wallet", icon: Wallet, badge: "" },
 ];
 
 const secondaryItems = [
-  { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Developer Tools", url: "/tools", icon: Wrench },
+  { title: "Settings", url: "/dashboard/settings", icon: Settings },
+  { title: "Developer Tools", url: "/dashboard/tools", icon: Wrench },
 ];
 
 export default function AppSidebar() {

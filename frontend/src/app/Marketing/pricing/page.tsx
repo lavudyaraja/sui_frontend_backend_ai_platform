@@ -134,7 +134,7 @@ export default function ContributionTiersPage() {
                   className="w-full" 
                   variant={tier.popular ? "default" : "outline"}
                 >
-                  <Link href="/join">{tier.cta}</Link>
+                  <Link href="/marketing/join">{tier.cta}</Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -394,7 +394,7 @@ export default function ContributionTiersPage() {
             Start contributing to decentralized AI today and work your way up through our contribution tiers.
           </p>
           <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-gray-100">
-            <Link href="/join">Join the Training Network</Link>
+            <Link href="/marketing/join">Join the Training Network</Link>
           </Button>
         </div>
       </div>

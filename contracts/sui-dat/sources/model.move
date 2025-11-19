@@ -1,21 +1,16 @@
 module sui_dat::model {
     use std::string::String;
-    use sui::object::{Self, UID};
-    use sui::transfer;
-    use sui::tx_context::{Self, TxContext};
-    use sui::dynamic_field::{Self, add, borrow, borrow_mut, remove};
-    use sui::bag::Bag;
+    use sui::bag::{Self, Bag};
 
-    /// Model registry to store all models
-    struct ModelRegistry has key {
+    /// Model registry object
+    public struct ModelRegistry has key {
         id: UID,
         models: Bag,
         latest_version: u64,
     }
 
-    /// Model information
-    struct Model has store {
-        id: UID,
+    /// Model info
+    public struct Model has store {
         version: u64,
         weights_cid: String,
         owner: address,
@@ -25,35 +20,33 @@ module sui_dat::model {
     }
 
     /// Gradient submission
-    struct Gradient has store {
+    public struct Gradient has store, drop, copy {
         contributor: address,
         model_version: u64,
         gradient_cid: String,
         timestamp: u64,
     }
 
-    /// Pending gradients for a model version
-    struct PendingGradients has store {
+    /// Pending gradient list
+    public struct PendingGradients has store, drop {
         gradients: vector<Gradient>,
     }
 
     const ENotAuthorized: u64 = 0;
     const EModelNotFound: u64 = 1;
-    const EInvalidVersion: u64 = 2;
-    const ENoPendingGradients: u64 = 3;
 
-    /// Create a new model registry
-    public entry fun create_registry(ctx: &mut TxContext) {
+    /// Create registry
+    public fun create_registry(ctx: &mut TxContext) {
         let registry = ModelRegistry {
             id: object::new(ctx),
-            models: Bag::new(ctx),
+            models: bag::new(ctx),
             latest_version: 0,
         };
-        transfer::transfer(registry, tx_context::sender(ctx));
+        transfer::share_object(registry);
     }
 
-    /// Create a new model
-    public entry fun create_model(
+    /// Create a model
+    public fun create_model(
         registry: &mut ModelRegistry,
         weights_cid: String,
         ctx: &mut TxContext
@@ -62,7 +55,6 @@ module sui_dat::model {
         registry.latest_version = version;
 
         let model = Model {
-            id: object::new(ctx),
             version,
             weights_cid,
             owner: tx_context::sender(ctx),
@@ -74,17 +66,15 @@ module sui_dat::model {
         bag::add(&mut registry.models, version, model);
     }
 
-    /// Submit a gradient for a model
-    public entry fun submit_gradient(
+    /// Submit gradient
+    public fun submit_gradient(
         registry: &mut ModelRegistry,
         model_version: u64,
         gradient_cid: String,
         ctx: &mut TxContext
     ) {
-        // Verify model exists
         assert!(bag::contains(&registry.models, model_version), EModelNotFound);
 
-        // Create gradient submission
         let gradient = Gradient {
             contributor: tx_context::sender(ctx),
             model_version,
@@ -92,77 +82,65 @@ module sui_dat::model {
             timestamp: tx_context::epoch(ctx),
         };
 
-        // Add to pending gradients
-        let field_name = format!("pending_{}", model_version);
-        if (bag::contains(&registry.models, &field_name)) {
-            let pending_mut = bag::borrow_mut<PendingGradients>(&mut registry.models, &field_name);
-            vector::push_back(&mut pending_mut.gradients, gradient);
+        // Pending key = model_version + LARGE_OFFSET (unique key)
+        let pending_key = model_version + 1_000_000_000;
+
+        if (bag::contains(&registry.models, pending_key)) {
+            let pending = bag::borrow_mut<u64, PendingGradients>(&mut registry.models, pending_key);
+            vector::push_back(&mut pending.gradients, gradient);
         } else {
             let pending = PendingGradients {
                 gradients: vector[gradient],
             };
-            bag::add(&mut registry.models, field_name, pending);
-        }
+            bag::add(&mut registry.models, pending_key, pending);
+        };
 
-        // Update model gradient count
-        let model_mut = bag::borrow_mut<Model>(&mut registry.models, model_version);
+        let model_mut = bag::borrow_mut<u64, Model>(&mut registry.models, model_version);
         model_mut.gradient_count = model_mut.gradient_count + 1;
     }
 
-    /// Finalize gradient aggregation and update model weights
-    public entry fun finalize_aggregation(
+    /// Finalize aggregation
+    public fun finalize_aggregation(
         registry: &mut ModelRegistry,
         model_version: u64,
         new_weights_cid: String,
         ctx: &mut TxContext
     ) {
-        // Verify model exists
         assert!(bag::contains(&registry.models, model_version), EModelNotFound);
 
-        // Verify sender is authorized (in a real implementation, this would check admin rights)
-        // For now, we'll allow the model owner to finalize
-        let model_ref = bag::borrow<Model>(&registry.models, model_version);
+        let model_ref = bag::borrow<u64, Model>(&registry.models, model_version);
         assert!(model_ref.owner == tx_context::sender(ctx), ENotAuthorized);
 
-        // Update model weights
-        let model_mut = bag::borrow_mut<Model>(&mut registry.models, model_version);
+        let model_mut = bag::borrow_mut<u64, Model>(&mut registry.models, model_version);
         model_mut.weights_cid = new_weights_cid;
         model_mut.updated_at = tx_context::epoch(ctx);
 
-        // Clear pending gradients
-        let field_name = format!("pending_{}", model_version);
-        if (bag::contains(&registry.models, &field_name)) {
-            let _: PendingGradients = bag::remove(&mut registry.models, &field_name);
+        let pending_key = model_version + 1_000_000_000;
+        if (bag::contains(&registry.models, pending_key)) {
+            let _pending: PendingGradients = bag::remove(&mut registry.models, pending_key);
         }
     }
 
-    /// Get model by version (view function)
     public fun get_model_by_version(registry: &ModelRegistry, version: u64): &Model {
         assert!(bag::contains(&registry.models, version), EModelNotFound);
-        bag::borrow(&registry.models, version)
+        bag::borrow<u64, Model>(&registry.models, version)
     }
 
-    /// Get latest model (view function)
     public fun get_latest_model(registry: &ModelRegistry): &Model {
         assert!(registry.latest_version > 0, EModelNotFound);
-        bag::borrow(&registry.models, registry.latest_version)
+        bag::borrow<u64, Model>(&registry.models, registry.latest_version)
     }
 
-    /// Get pending gradients for a model version (view function)
-    public fun get_pending_gradients(registry: &ModelRegistry, model_version: u64): vector<Gradient> {
-        let field_name = format!("pending_{}", model_version);
-        if (bag::contains(&registry.models, &field_name)) {
-            let pending = bag::borrow<PendingGradients>(&registry.models, &field_name);
-            pending.gradients
+    public fun get_pending_gradients(
+        registry: &ModelRegistry,
+        model_version: u64
+    ): vector<Gradient> {
+        let pending_key = model_version + 1_000_000_000;
+        if (bag::contains(&registry.models, pending_key)) {
+            let pending = bag::borrow<u64, PendingGradients>(&registry.models, pending_key);
+            *&pending.gradients
         } else {
             vector[]
         }
-    }
-
-    /// Helper function to format strings (simplified implementation)
-    fun format(prefix: &str, value: u64): String {
-        // In a real implementation, you would use the string::utf8 function
-        // This is a simplified placeholder
-        string::utf8(b"pending_123") // Placeholder implementation
     }
 }

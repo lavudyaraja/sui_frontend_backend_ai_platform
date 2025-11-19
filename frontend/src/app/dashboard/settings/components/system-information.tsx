@@ -18,7 +18,7 @@ export default function SystemInformation() {
       value: 'Connected', 
       icon: Database,
       status: 'active',
-      badge: 'Mainnet'
+      badge: 'Testnet'
     },
     { 
       label: 'Seal Security', 

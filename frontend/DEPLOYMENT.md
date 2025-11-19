@@ -126,9 +126,9 @@ NEXT_PUBLIC_WALRUS_AGGREGATOR=https://aggregator.walrus-testnet.walrus.space
 
 ```env
 NEXT_PUBLIC_BACKEND_URL=https://your-production-backend.com
-NEXT_PUBLIC_SUI_NETWORK=mainnet
-NEXT_PUBLIC_WALRUS_API_ENDPOINT=https://walrus-mainnet.walrus.space
-NEXT_PUBLIC_WALRUS_AGGREGATOR=https://aggregator.walrus-mainnet.walrus.space
+NEXT_PUBLIC_SUI_NETWORK=testnet
+NEXT_PUBLIC_WALRUS_API_ENDPOINT=https://walrus-testnet.walrus.space
+NEXT_PUBLIC_WALRUS_AGGREGATOR=https://aggregator.walrus-testnet.walrus.space
 ```
 
 ## Troubleshooting

@@ -59,8 +59,8 @@ export class ModelService {
 
   constructor() {
     // Initialize Sui client based on environment
-    const networkUrl = SUI_NETWORK === 'mainnet' 
-      ? getFullnodeUrl('mainnet')
+    const networkUrl = SUI_NETWORK === 'testnet' 
+      ? getFullnodeUrl('testnet')
       : SUI_NETWORK === 'devnet'
       ? getFullnodeUrl('devnet')
       : getFullnodeUrl('testnet');

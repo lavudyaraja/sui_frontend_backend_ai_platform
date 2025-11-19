@@ -25,13 +25,13 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild size="lg" className="h-12 px-8 text-base bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 shadow-sm">
-              <Link href="/join">
+              <Link href="/marketing/join">
                 Join the Network
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base border-slate-300 hover:bg-slate-50">
-              <Link href="/about">Learn How It Works</Link>
+              <Link href="/marketing/about">Learn How It Works</Link>
             </Button>
           </div>
         </div>
@@ -247,13 +247,13 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild className="h-12 px-8 bg-blue-600 text-white hover:bg-blue-700 font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
-              <Link href="/Marketing/join">
+              <Link href="/marketing/join">
                 Join the Training Network
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
             <Button asChild variant="secondary" className="h-12 px-8 bg-slate-700 text-white hover:bg-slate-600 font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
-              <Link href="/pricing">View Contribution Tiers</Link>
+              <Link href="/marketing/pricing">View Contribution Tiers</Link>
             </Button>
           </div>
         </div>
@@ -279,9 +279,9 @@ export default function LandingPage() {
               <h3 className="font-semibold text-slate-900 mb-5">Product</h3>
               <ul className="space-y-3">
                 <li><Link href="/dashboard" className="text-slate-600 hover:text-indigo-600 transition-colors">Dashboard</Link></li>
-                <li><Link href="/about" className="text-slate-600 hover:text-indigo-600 transition-colors">How It Works</Link></li>
-                <li><Link href="/pricing" className="text-slate-600 hover:text-indigo-600 transition-colors">Contribution Tiers</Link></li>
-                <li><Link href="/join" className="text-slate-600 hover:text-indigo-600 transition-colors">Join Network</Link></li>
+                <li><Link href="/marketing/about" className="text-slate-600 hover:text-indigo-600 transition-colors">How It Works</Link></li>
+                <li><Link href="/marketing/pricing" className="text-slate-600 hover:text-indigo-600 transition-colors">Contribution Tiers</Link></li>
+                <li><Link href="/marketing/join" className="text-slate-600 hover:text-indigo-600 transition-colors">Join Network</Link></li>
               </ul>
             </div>
             

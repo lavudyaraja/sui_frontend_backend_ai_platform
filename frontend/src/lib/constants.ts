@@ -13,7 +13,7 @@ export const APP = {
 
 // Network constants
 export const NETWORK = {
-  SUI_MAINNET: 'mainnet',
+  SUI_MAINNET: 'testnet',
   SUI_TESTNET: 'testnet',
   SUI_DEVNET: 'devnet',
   DEFAULT_NETWORK: process.env.NEXT_PUBLIC_SUI_NETWORK || 'testnet',

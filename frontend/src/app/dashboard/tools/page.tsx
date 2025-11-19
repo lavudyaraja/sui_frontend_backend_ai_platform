@@ -121,7 +121,7 @@ export default function DeveloperToolsPage() {
 import { WalrusClient } from '@walrus/sdk';
 
 const client = new WalrusClient({
-  network: 'mainnet'
+  network: 'testnet'
 });
 
 const data = new Blob(['Your data here']);
@@ -173,7 +173,7 @@ const deployment = await nautilus.deployModel({
     {
       command: "sui deploy",
       description: "Deploy smart contracts to Sui",
-      example: "sui deploy ./contracts --network mainnet"
+      example: "sui deploy ./contracts --network testnet"
     }
   ];
 

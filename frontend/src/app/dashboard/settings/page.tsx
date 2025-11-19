@@ -1,267 +1,155 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useThemeContext } from '@/context/theme-provider';
-import { useSettingsContext } from '@/context/settings-provider';
-import { Separator } from '@/components/ui/separator';
-import { PageHeader } from '@/components/shared/page-header';
-import { Save, Monitor, Bell, Wallet, Cpu } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Settings, Wallet, Sliders, User, Shield, Database, Activity } from 'lucide-react';
+
+// Import components (these would be separate files in your project)
+import WalletSettings from './components/wallet-settings';
+import PreferencesSettings from './components/preferences-settings';
+import AccountManagement from './components/account-management';
+import SystemInformation from './components/system-information';
 
 export default function SettingsPage() {
-  const { theme, toggleTheme } = useThemeContext();
-  const { settings, updateSettings, resetSettings } = useSettingsContext();
-  
-  // Local state for form inputs
-  const [formData, setFormData] = useState(settings);
+  const [activeTab, setActiveTab] = useState('general');
 
-  // Update form data when settings change
-  useEffect(() => {
-    setFormData(settings);
-  }, [settings]);
+  const tabs = [
+    { id: 'general', label: 'General', icon: Settings },
+    { id: 'wallet', label: 'Wallet', icon: Wallet },
+    { id: 'preferences', label: 'Preferences', icon: Sliders },
+    { id: 'account', label: 'Account', icon: User },
+  ];
 
-  // Update theme when settings change
-  useEffect(() => {
-    if (formData.theme !== theme) {
-      toggleTheme();
-    }
-  }, [formData.theme, theme, toggleTheme]);
-
-  const handleSaveSettings = () => {
-    updateSettings(formData);
-    alert('Settings saved successfully!');
-  };
-
-  const handleResetSettings = () => {
-    if (confirm('Are you sure you want to reset all settings to default?')) {
-      resetSettings();
-      alert('Settings reset to default!');
-    }
-  };
+  const quickStats = [
+    { icon: Activity, label: 'Status', value: 'Active' },
+    { icon: Database, label: 'Storage', value: '2.4/5 GB' },
+    { icon: Shield, label: 'Security', value: 'High' },
+    { icon: Wallet, label: 'Wallet', value: 'Connected' },
+  ];
 
   return (
-    <div className="space-y-6">
-      <PageHeader 
-        title="Settings" 
-        description="Manage your account preferences and application settings" 
-      />
-      
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Theme Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Monitor className="h-5 w-5" />
-              Appearance
-            </CardTitle>
-            <CardDescription>
-              Customize the look and feel of the application
-            </CardDescription>
+    <div className="h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 p-6 pb-0">
+        <Card className="border border-gray-200">
+          <CardHeader className="border-b border-gray-100 pb-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2.5 bg-gray-900 rounded-lg">
+                <Settings className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
+                  Settings
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mt-0.5">
+                  Manage your DeepSurge platform settings and preferences
+                </p>
+              </div>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              {quickStats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={index} className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Icon className="w-4 h-4 text-gray-600" />
+                      <span className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                        {stat.label}
+                      </span>
+                    </div>
+                    <p className="text-xl font-semibold text-gray-900 dark:text-white">{stat.value}</p>
+                  </div>
+                );
+              })}
+            </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="theme-mode">Dark Mode</Label>
-              <Switch
-                id="theme-mode"
-                checked={formData.theme === 'dark'}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    theme: checked ? 'dark' : 'light' 
-                  }))
-                }
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Training Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Cpu className="h-5 w-5" />
-              Training Preferences
-            </CardTitle>
-            <CardDescription>
-              Configure how training sessions are handled
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="auto-start">Auto-start Training</Label>
-              <Switch
-                id="auto-start"
-                checked={formData.training.autoStart}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    training: { ...prev.training, autoStart: checked }
-                  }))
-                }
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="max-concurrent">Max Concurrent Sessions</Label>
-              <Select
-                value={formData.training.maxConcurrent.toString()}
-                onValueChange={(value) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    training: { ...prev.training, maxConcurrent: parseInt(value) }
-                  }))
-                }
-              >
-                <SelectTrigger id="max-concurrent">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 Session</SelectItem>
-                  <SelectItem value="2">2 Sessions</SelectItem>
-                  <SelectItem value="3">3 Sessions</SelectItem>
-                  <SelectItem value="4">4 Sessions</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Notification Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5" />
-              Notifications
-            </CardTitle>
-            <CardDescription>
-              Choose which notifications you want to receive
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="email-notifications">Email Notifications</Label>
-              <Switch
-                id="email-notifications"
-                checked={formData.notifications.email}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    notifications: { ...prev.notifications, email: checked }
-                  }))
-                }
-              />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="push-notifications">Push Notifications</Label>
-              <Switch
-                id="push-notifications"
-                checked={formData.notifications.push}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    notifications: { ...prev.notifications, push: checked }
-                  }))
-                }
-              />
-            </div>
-            
-            <Separator />
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="training-updates">Training Updates</Label>
-              <Switch
-                id="training-updates"
-                checked={formData.notifications.trainingUpdates}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    notifications: { ...prev.notifications, trainingUpdates: checked }
-                  }))
-                }
-              />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="model-updates">Model Updates</Label>
-              <Switch
-                id="model-updates"
-                checked={formData.notifications.modelUpdates}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    notifications: { ...prev.notifications, modelUpdates: checked }
-                  }))
-                }
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Wallet Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Wallet className="h-5 w-5" />
-              Wallet Connection
-            </CardTitle>
-            <CardDescription>
-              Manage your wallet connection preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="auto-connect">Auto-connect Wallet</Label>
-              <Switch
-                id="auto-connect"
-                checked={formData.wallet.autoConnect}
-                onCheckedChange={(checked) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    wallet: { ...prev.wallet, autoConnect: checked }
-                  }))
-                }
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="preferred-network">Preferred Network</Label>
-              <Select
-                value={formData.wallet.preferredNetwork}
-                onValueChange={(value) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    wallet: { ...prev.wallet, preferredNetwork: value as 'testnet' | 'mainnet' | 'devnet' }
-                  }))
-                }
-              >
-                <SelectTrigger id="preferred-network">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="testnet">Testnet</SelectItem>
-                  <SelectItem value="mainnet">Mainnet</SelectItem>
-                  <SelectItem value="devnet">Devnet</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
         </Card>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex justify-end gap-3">
-        <Button variant="outline" onClick={handleResetSettings}>
-          Reset to Default
-        </Button>
-        <Button onClick={handleSaveSettings} className="flex items-center gap-2">
-          <Save className="h-4 w-4" />
-          Save Settings
-        </Button>
+      {/* Main Content Area with Sidebar */}
+      <div className="flex-1 overflow-hidden p-6 pt-6">
+        <div className="flex gap-6 h-full">
+          {/* Fixed Vertical Sidebar */}
+          <div className="w-64 flex-shrink-0">
+            <Card className="border border-gray-200 h-full">
+              <CardContent className="p-2">
+                <nav className="space-y-1">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                          activeTab === tab.id
+                            ? 'bg-gray-900 text-white dark:bg-gray-700'
+                            : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Scrollable Content Area */}
+          <div className="flex-1 overflow-y-auto pr-2">
+            {activeTab === 'general' && (
+              <div className="space-y-6">
+                <Card className="border border-gray-200">
+                  <CardHeader className="border-b border-gray-100 pb-4">
+                    <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+                      General Settings
+                    </CardTitle>
+                    <CardDescription className="text-sm text-gray-500">
+                      Manage your general platform settings and system information
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="bg-blue-50 rounded-lg p-5 border border-blue-200">
+                      <h3 className="font-semibold text-base mb-2 text-gray-900">
+                        Welcome to DeepSurge Settings
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                        DeepSurge is a decentralized AI training platform built on Sui blockchain, utilizing Walrus for decentralized storage, 
+                        Seal for data security, and Nautilus for AI orchestration.
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+                        <div className="bg-white rounded-md p-3 border border-gray-200">
+                          <p className="text-xs text-gray-600 mb-1">Network</p>
+                          <p className="font-medium text-gray-900">Sui Testnet</p>
+                        </div>
+                        <div className="bg-white rounded-md p-3 border border-gray-200">
+                          <p className="text-xs text-gray-600 mb-1">Storage</p>
+                          <p className="font-medium text-gray-900">Walrus</p>
+                        </div>
+                        <div className="bg-white rounded-md p-3 border border-gray-200">
+                          <p className="text-xs text-gray-600 mb-1">Security</p>
+                          <p className="font-medium text-gray-900">Seal</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <SystemInformation />
+              </div>
+            )}
+            
+            {activeTab === 'wallet' && <WalletSettings />}
+            
+            {activeTab === 'preferences' && <PreferencesSettings />}
+            
+            {activeTab === 'account' && <AccountManagement />}
+          </div>
+        </div>
       </div>
     </div>
   );
