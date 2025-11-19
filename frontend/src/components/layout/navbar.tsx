@@ -18,7 +18,7 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <Image 
-                src="/logos/sui-dat-icon.svg" 
+                src="/logos/main-logo.svg" 
                 alt="Sui-DAT Logo" 
                 width={32} 
                 height={32} 

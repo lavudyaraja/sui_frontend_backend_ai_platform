@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "50mb",
     },
   },
+  // Configure image optimization
+  images: {
+    unoptimized: true, // Required for static exports to work properly
+  },
 };
 
 export default nextConfig;
