@@ -85,13 +85,13 @@ export default function AppSidebar() {
   }, []);
 
   // Theme toggle
-  const toggleDarkMode = React.useCallback(() => {
-    setIsDarkMode((prev) => {
-      const newMode = !prev;
-      document.documentElement.classList.toggle("dark", newMode);
-      return newMode;
-    });
-  }, []);
+  // const toggleDarkMode = React.useCallback(() => {
+  //   setIsDarkMode((prev) => {
+  //     const newMode = !prev;
+  //     document.documentElement.classList.toggle("dark", newMode);
+  //     return newMode;
+  //   });
+  // }, []);
 
   // Navigation handler
   const handleNavClick = React.useCallback(
@@ -141,7 +141,7 @@ export default function AppSidebar() {
 
           <div className="flex items-center gap-1">
             {/* Theme Toggle */}
-            <button
+            {/* <button
               onClick={toggleDarkMode}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 active:scale-95"
               aria-label="Toggle theme"
@@ -151,7 +151,7 @@ export default function AppSidebar() {
               ) : (
                 <Moon className="h-4 w-4 text-gray-600" />
               )}
-            </button>
+            </button> */}
 
             {/* Notifications */}
             <button
