@@ -280,7 +280,7 @@ We welcome contributions to the Sui-DAT project! Please follow these steps:
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## Screenshot Images
-<img width="1910" height="1830" alt="screen-1" src="https://github.com/user-attachments/assets/0afbd59a-0c45-42e3-8903-a7eddd3b47b8" />
+<img width="1910" height="2232" alt="image" src="https://github.com/user-attachments/assets/d9316189-9b57-4332-ab46-ae3061315542" />
 <img width="2040" height="1654" alt="screen-2" src="https://github.com/user-attachments/assets/28bd07cd-eefc-4b9f-92e2-f30ac245660e" />
 <img width="1910" height="2853" alt="screen-3" src="https://github.com/user-attachments/assets/a9cbcee5-4b5d-4bf2-823e-bcd7e5c797e0" />
 <img width="1910" height="2935" alt="screen-4" src="https://github.com/user-attachments/assets/638583e3-69f3-4523-9581-29851eaaa6e0" />
