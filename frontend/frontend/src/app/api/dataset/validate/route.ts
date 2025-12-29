@@ -20,9 +20,9 @@ interface ValidationResult {
 }
 
 /**
- * Parse CSV/TSV row handling quoted fields
+ * Parse CSV/TSV line properly handling quoted fields
  */
-function parseCsvRow(line: string, delimiter: string): string[] {
+function parseCsvLine(line: string, delimiter: string): string[] {
   const result: string[] = [];
   let current = '';
   let inQuotes = false;
@@ -34,7 +34,7 @@ function parseCsvRow(line: string, delimiter: string): string[] {
     
     if (char === '"') {
       if (inQuotes && nextChar === '"') {
-        // Escaped quote (double quote)
+        // Escaped quote (double quote inside quoted field)
         current += '"';
         i += 2;
         continue;
@@ -71,7 +71,7 @@ function validateCsvTsv(content: string, delimiter: string): Partial<ValidationR
   const errors: string[] = [];
   const warnings: string[] = [];
   
-  const lines = content.trim().split(/\r?\n/).filter(line => line.trim().length > 0);
+  const lines = content.trim().split('\n').filter(line => line.trim().length > 0);
   const rowCount = lines.length - 1; // Subtract header
   
   if (lines.length === 0) {
@@ -79,8 +79,14 @@ function validateCsvTsv(content: string, delimiter: string): Partial<ValidationR
     return { isValid: false, errors };
   }
   
-  // Parse header with proper CSV parsing
-  const header = parseCsvRow(lines[0], delimiter).map(h => h.replace(/^"|"$/g, '').trim());
+  // Parse header using proper CSV parsing
+  const header = parseCsvLine(lines[0], delimiter).map(h => {
+    // Remove surrounding quotes if present
+    if (h.startsWith('"') && h.endsWith('"')) {
+      return h.slice(1, -1).trim();
+    }
+    return h.trim();
+  });
   const columnCount = header.length;
   
   // Check header
@@ -99,16 +105,23 @@ function validateCsvTsv(content: string, delimiter: string): Partial<ValidationR
     warnings.push('Dataset has fewer than 10 rows - may be insufficient for training');
   }
   
-  // Check for consistent column count
+  // Check for consistent column count using proper CSV parsing
   let inconsistentRows = 0;
   let emptyRows = 0;
   
-  for (let i = 1; i < Math.min(lines.length, 100); i++) { // Check first 100 rows
-    const cols = parseCsvRow(lines[i], delimiter).map(col => col.replace(/^"|"$/g, ''));
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseCsvLine(lines[i], delimiter).map(col => {
+      // Remove surrounding quotes if present
+      if (col.startsWith('"') && col.endsWith('"')) {
+        return col.slice(1, -1).trim();
+      }
+      return col.trim();
+    });
+    
     if (cols.length !== columnCount) {
       inconsistentRows++;
     }
-    if (cols.every(col => col.trim() === '')) {
+    if (cols.every(col => col === '')) {
       emptyRows++;
     }
   }
