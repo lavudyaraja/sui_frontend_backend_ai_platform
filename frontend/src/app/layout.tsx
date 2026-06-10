@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <title>Sui-DAT - Decentralized AI Training Platform</title>
         <meta name="description" content="Decentralized AI training platform built on Sui and Walrus" />
       </head>
-      <body className="antialiased bg-gray-50">
+      <body className="antialiased bg-white text-gray-900">
         <QueryClientProvider client={queryClient}>
           <SuiClientProvider networks={networks} defaultNetwork="testnet">
             

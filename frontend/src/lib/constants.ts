@@ -124,9 +124,13 @@ export enum ModelUpdateType {
   AGGREGATION_FINALIZATION = 'aggregation_finalization',
 }
 
+// Import backend configuration
+import { API_CONFIG } from './config';
+
 // API endpoints
 export const API_ENDPOINTS = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api',
+  BASE_URL: API_CONFIG.BACKEND_API_URL,
+  BACKEND_BASE_URL: API_CONFIG.BACKEND_BASE_URL,
   FETCH_MODEL: '/model',
   SUBMIT_GRADIENT: '/gradient',
   FETCH_CONTRIBUTORS: '/contributors',

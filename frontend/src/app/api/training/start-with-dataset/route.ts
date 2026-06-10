@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { walrusService } from '@/services/walrus.service';
+import { API_CONFIG } from '@/lib/config';
 
 // Maximum file size: 50MB
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -8,11 +9,11 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = ['.csv', '.json', '.txt', '.data', '.tsv'];
 
 /**
- * Helper: backend base URL (FastAPI). Prefer explicit env, fallback to localhost:8000
- * Make sure to set NEXT_PUBLIC_BACKEND_URL=http://localhost:8000 in frontend/.env.local
+ * Helper: backend base URL (FastAPI)
+ * Uses centralized configuration from @/lib/config
  */
 function getBackendBase(): string {
-  return (process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000').replace(/\/+$/, '');
+  return API_CONFIG.BACKEND_BASE_URL;
 }
 
 // Active sessions store (keyed by backend session id)

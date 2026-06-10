@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_CONFIG } from '@/lib/config';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+const BACKEND_URL = API_CONFIG.BACKEND_BASE_URL;
 
 interface TrainingRequest {
   action: 'start' | 'pause' | 'resume' | 'stop' | 'status';

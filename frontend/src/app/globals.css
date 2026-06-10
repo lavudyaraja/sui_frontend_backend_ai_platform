@@ -120,3 +120,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Force white background on mobile sidebar sheet */
+@media (max-width: 767px) {
+  [data-mobile="true"] {
+    --sidebar: oklch(1 0 0) !important;
+    --sidebar-foreground: oklch(0.129 0.042 264.695) !important;
+    background-color: white !important;
+  }
+}

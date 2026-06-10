@@ -1,12 +1,10 @@
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
+import { API_CONFIG } from "@/lib/config";
 
-// Use environment variable or fallback to localhost
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || 
-  process.env.BACKEND_URL || 
-  "http://127.0.0.1:8000";
+// Use centralized backend URL configuration
+const BACKEND_URL = API_CONFIG.BACKEND_BASE_URL;
 
 export async function POST(request: NextRequest) {
   try {
@@ -69,11 +67,27 @@ export async function POST(request: NextRequest) {
       }
       
       console.error("❌ Backend connection failed:", fetchError);
+      
+      // Provide helpful error message based on environment
+      let errorMessage = `Cannot connect to backend at ${BACKEND_URL || 'undefined'}. `;
+      
+      if (!BACKEND_URL || BACKEND_URL === '') {
+        errorMessage = 'Backend URL is not configured. ';
+        if (process.env.VERCEL === '1') {
+          errorMessage += 'Please set NEXT_PUBLIC_BACKEND_URL in Vercel environment variables (Settings → Environment Variables).';
+        } else {
+          errorMessage += 'Please set NEXT_PUBLIC_BACKEND_URL environment variable.';
+        }
+      } else {
+        errorMessage += 'Please ensure the backend server is running and accessible.';
+      }
+      
       return NextResponse.json(
         { 
           success: false, 
-          error: `Cannot connect to backend at ${BACKEND_URL}. Please ensure the backend server is running.`,
-          details: fetchError.message 
+          error: errorMessage,
+          details: fetchError.message,
+          backend_url: BACKEND_URL || 'not configured'
         },
         { status: 503 }
       );

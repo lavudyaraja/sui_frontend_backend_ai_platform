@@ -25,14 +25,35 @@ This guide explains how to deploy the Sui-DAT frontend independently to Vercel o
 
 ### 2. Environment Variables
 
-For the frontend to work correctly, you need to set the following environment variables in your Vercel project:
+**⚠️ IMPORTANT**: You MUST set the `NEXT_PUBLIC_BACKEND_URL` environment variable in Vercel for the application to work correctly. Without it, the frontend will not be able to connect to the backend.
 
-| Variable | Description | Example Value |
-|----------|-------------|---------------|
-| `NEXT_PUBLIC_BACKEND_URL` | Backend API URL | `https://your-backend.vercel.app` |
-| `NEXT_PUBLIC_SUI_NETWORK` | Sui network | `testnet` |
-| `NEXT_PUBLIC_WALRUS_API_ENDPOINT` | Walrus API endpoint | `https://walrus-testnet.walrus.space` |
-| `NEXT_PUBLIC_WALRUS_AGGREGATOR` | Walrus aggregator | `https://aggregator.walrus-testnet.walrus.space` |
+#### How to Set Environment Variables in Vercel:
+
+1. Go to your project in Vercel dashboard
+2. Navigate to **Settings** → **Environment Variables**
+3. Add the following variables:
+
+| Variable | Description | Example Value | Required |
+|----------|-------------|---------------|----------|
+| `NEXT_PUBLIC_BACKEND_URL` | **Backend API URL** (without trailing slash) | `https://sui-backend-ai-platform.vercel.app` | ✅ **YES** |
+| `NEXT_PUBLIC_SUI_NETWORK` | Sui network | `testnet` | Optional |
+| `NEXT_PUBLIC_WALRUS_API_ENDPOINT` | Walrus API endpoint | `https://walrus-testnet.walrus.space` | Optional |
+| `NEXT_PUBLIC_WALRUS_AGGREGATOR` | Walrus aggregator | `https://aggregator.walrus-testnet.walrus.space` | Optional |
+
+**✅ Current Deployed URLs:**
+- **Frontend:** https://sui-frontend-ai-platform.vercel.app/
+- **Backend:** https://sui-backend-ai-platform.vercel.app/
+
+#### Backend URL Configuration:
+
+- **If your backend is deployed on Vercel**: Use the Vercel deployment URL (e.g., `https://your-backend-app.vercel.app`)
+- **If your backend is deployed elsewhere**: Use the full URL (e.g., `https://api.yourdomain.com`)
+- **Do NOT use `localhost:8000`** in production - it will not work!
+
+#### After Setting Environment Variables:
+
+1. **Redeploy** your application for changes to take effect
+2. You can trigger a redeploy from the Vercel dashboard or by pushing a new commit
 
 ## Docker Deployment
 
@@ -125,11 +146,15 @@ NEXT_PUBLIC_WALRUS_AGGREGATOR=https://aggregator.walrus-testnet.walrus.space
 ### Production Environment
 
 ```env
-NEXT_PUBLIC_BACKEND_URL=https://your-production-backend.com
+NEXT_PUBLIC_BACKEND_URL=https://sui-backend-ai-platform.vercel.app
 NEXT_PUBLIC_SUI_NETWORK=testnet
 NEXT_PUBLIC_WALRUS_API_ENDPOINT=https://walrus-testnet.walrus.space
 NEXT_PUBLIC_WALRUS_AGGREGATOR=https://aggregator.walrus-testnet.walrus.space
 ```
+
+**✅ Current Production URLs:**
+- Frontend: https://sui-frontend-ai-platform.vercel.app/
+- Backend: https://sui-backend-ai-platform.vercel.app/
 
 ## Troubleshooting
 
